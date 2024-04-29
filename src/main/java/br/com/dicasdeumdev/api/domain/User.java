@@ -1,7 +1,7 @@
 package br.com.dicasdeumdev.api.domain;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 // a anotação @Data adiciona todos os metodoa, get, set e hashcode
