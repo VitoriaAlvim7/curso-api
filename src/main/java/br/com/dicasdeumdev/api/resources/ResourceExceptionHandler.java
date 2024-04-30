@@ -1,6 +1,7 @@
 package br.com.dicasdeumdev.api.resources;
 
 import br.com.dicasdeumdev.api.resources.exceptions.StandardError;
+import br.com.dicasdeumdev.api.services.exceptions.DataIntegratyViolationException;
 import br.com.dicasdeumdev.api.services.exceptions.ObjectNotFoundWxception;
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,9 +15,18 @@ import java.time.LocalDateTime;
 public class ResourceExceptionHandler {
 
     @ExceptionHandler(ObjectNotFoundWxception.class)
-    public ResponseEntity<StandardError>objectNotFound(ObjectNotFoundWxception ex, HttpServletRequest request) {
-        StandardError error =
-                new StandardError(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), ex.getMessage(), request.getRequestURI());
+    public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundWxception ex, HttpServletRequest request) {
+        StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), ex.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+
+        /*
+        uma Exeption que mostra os dados que vão aparecer quando o error for que o objeto não foi encontrado
+         */
+    }
+
+    @ExceptionHandler(DataIntegratyViolationException.class)
+    public ResponseEntity<StandardError> dataIntegratViolationException(DataIntegratyViolationException ex, HttpServletRequest request) {
+        StandardError error = new StandardError(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }

@@ -4,6 +4,7 @@ import br.com.dicasdeumdev.api.domain.User;
 import br.com.dicasdeumdev.api.domain.dto.UserDTO;
 import br.com.dicasdeumdev.api.repositories.UserRepository;
 import br.com.dicasdeumdev.api.services.UserService;
+import br.com.dicasdeumdev.api.services.exceptions.DataIntegratyViolationException;
 import br.com.dicasdeumdev.api.services.exceptions.ObjectNotFoundWxception;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +27,26 @@ public class UserServiceImpl implements UserService {
         Optional<User> obj = repository.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundWxception("Objeto não encontrado"));
     }
+    /*
+    caso o for pesquisado o id do cliente e ele não estiver salvo no banco, retorna uma exception com a mensagem
+    "Objeto não encontrado
+     */
 
     public List<User> findAll() {
         return repository.findAll();
-    }
+    } // lista do Tipo User
 
     @Override
     public User create(UserDTO obj) {
+        findByEmail(obj);
         return repository.save(mapper.map(obj, User.class));
+    }
+
+    private void findByEmail(UserDTO obj) {
+        Optional<User> user = repository.findByEmail(obj.getEmail());
+        if (user.isPresent()) {
+            throw  new DataIntegratyViolationException("E-Mail já cadastrado no sistema");
+
+        }
     }
 }
