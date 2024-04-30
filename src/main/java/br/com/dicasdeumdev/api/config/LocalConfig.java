@@ -25,4 +25,8 @@ public class LocalConfig {
 
         repository.saveAll(List.of(u1, u2));
     }
+
+    /*
+    foi startado o Banco de Dados e adicionado dois usuários no repository
+     */
 }
