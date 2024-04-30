@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/user")
 public class UserResource {
 
+    public static final String ID = "/{id}";
     @Autowired
     private ModelMapper mapper;
     /*
@@ -28,7 +29,7 @@ public class UserResource {
     @Autowired
     private UserService service;
 
-    @GetMapping(value = "/{id}") // localhost:8080/user/{id} o id seria o numero do cliente cadastrado (1, 2, ...)
+    @GetMapping(value = ID) // localhost:8080/user/{id} o id seria o numero do cliente cadastrado (1, 2, ...)
     public ResponseEntity<UserDTO> findById(@PathVariable Integer id){
         return ResponseEntity.ok().body(mapper.map(service.findById(id), UserDTO.class));
     }
@@ -49,7 +50,7 @@ public class UserResource {
     @PostMapping
     public ResponseEntity<UserDTO> create(@RequestBody UserDTO obj) {
         URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
+                .fromCurrentRequest().path(ID)
                 .buildAndExpand(service.create(obj).getId())
                 .toUri();
         return ResponseEntity.created(uri).build();
@@ -60,10 +61,21 @@ public class UserResource {
     do novo uruário como parte da resposta
      */
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = ID)
     public ResponseEntity<UserDTO> update(@PathVariable Integer id, @RequestBody UserDTO obj) {
         obj.setId(id);
         return ResponseEntity.ok().body(mapper.map(service.update(obj), UserDTO.class));
+    }
+    /*
+    quando uma solicitação PUT é feita para o URI, esse metodo atualiza
+    o usuário com o id escolhido atualizando os dados desejados e retorna
+    o usuário atualizado
+     */
+
+    @DeleteMapping(value = ID)
+    public ResponseEntity<UserDTO> delete(@PathVariable Integer id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
