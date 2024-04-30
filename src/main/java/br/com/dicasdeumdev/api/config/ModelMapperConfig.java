@@ -10,5 +10,10 @@ public class ModelMapperConfig {
     @Bean
     public ModelMapper mapper() {
         return new ModelMapper();
+
+        /*
+        a função ModelMapper é usada para transformar um tipo de Objeto em um Objeto de outro tipo
+        por exemplo, um User para um UserDTO
+         */
     }
 }
