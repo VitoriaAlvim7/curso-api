@@ -6,11 +6,10 @@ import br.com.dicasdeumdev.api.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,21 +19,46 @@ public class UserResource {
 
     @Autowired
     private ModelMapper mapper;
+    /*
+    o ModelMapper é usado para converter um objeto e de um tipo para um objeto de outro tipo
+    por exemplo, existe duas classes uma classe Pessoa e uma PessoaDTO, e voce quer converter
+    a classe Pessoa em PessoaDTO, então você usaria o ModelMapper para fazer essa conversão
+     */
 
     @Autowired
     private UserService service;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/{id}") // localhost:8080/user/{id} o id seria o numero do cliente cadastrado (1, 2, ...)
     public ResponseEntity<UserDTO> findById(@PathVariable Integer id){
         return ResponseEntity.ok().body(mapper.map(service.findById(id), UserDTO.class));
     }
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> findAll() {
-        return ResponseEntity.ok().body(service.findAll().stream()
+        List<UserDTO> listDTO = service.findAll().stream()
                 .map(x -> mapper.map(x, UserDTO.class))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDTO);
     }
+    /*
+    esse método retorna uma resposta HTTP com status 200(ok) e uma lista de objetos
+    UserDTO que representa todoa os usuários recuperados do serviço ou do Repositório
+    do banco de dados
+     */
+
+    @PostMapping
+    public ResponseEntity<UserDTO> create(@RequestBody UserDTO obj) {
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(service.create(obj).getId())
+                .toUri();
+        return ResponseEntity.created(uri).build();
+    }
+    /*
+    o método create recebe um Objeto chamado UserDTO cria um novo usuario, gera
+    um URI e para o novo recurso craido ele retorna uma resposta HTTP 201 com o URI
+    do novo uruário como parte da resposta
+     */
 
 
 }
