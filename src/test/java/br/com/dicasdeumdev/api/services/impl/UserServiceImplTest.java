@@ -3,7 +3,7 @@ package br.com.dicasdeumdev.api.services.impl;
 import br.com.dicasdeumdev.api.domain.User;
 import br.com.dicasdeumdev.api.domain.dto.UserDTO;
 import br.com.dicasdeumdev.api.repositories.UserRepository;
-import org.junit.jupiter.api.Assertions;
+import br.com.dicasdeumdev.api.services.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -48,12 +49,28 @@ class UserServiceImplTest {
 
         User response = service.findById(ID);
 
-        assertNotNull(response);
-        assertEquals(User.class, response.getClass());
-        assertEquals(ID, response.getId());
-        assertEquals(NAME, response.getName());
-        assertEquals(EMAIL, response.getEmail());
+        assertNotNull(response);// pega uma resposta que não seja nula
+        assertEquals(User.class, response.getClass());// pega a resposta que seja igual a Classe User
+        assertEquals(ID, response.getId());// pega a resposta que seja igual ao Id
+        assertEquals(NAME, response.getName());// pega a resposta que seja igual ao nome
+        assertEquals(EMAIL, response.getEmail());// pega a resposta que seja igual ao email
     }
+
+    //quando buscar pelo id então retorne uma exceção de objeto não encontrado
+    @Test
+    void whenFindByIDThenReturnAnObjectNotFoundException() {
+        when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Objeto não encontrado"));
+
+        try {
+            service.findById(ID);
+        }catch (Exception ex) {
+            assertEquals(ObjectNotFoundException.class, ex.getClass());
+            assertEquals("Objeto não encontrado", ex.getMessage());
+        }
+    }
+    /*
+    ele esra testando o metodo FindById, caso o Id não estiver salvo, ele lança uma exceção de Objeto não encontrado
+     */
 
     @Test
     void findAll() {
