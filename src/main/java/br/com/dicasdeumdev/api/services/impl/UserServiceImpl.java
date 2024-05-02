@@ -5,7 +5,7 @@ import br.com.dicasdeumdev.api.domain.dto.UserDTO;
 import br.com.dicasdeumdev.api.repositories.UserRepository;
 import br.com.dicasdeumdev.api.services.UserService;
 import br.com.dicasdeumdev.api.services.exceptions.DataIntegratyViolationException;
-import br.com.dicasdeumdev.api.services.exceptions.ObjectNotFoundWxception;
+import br.com.dicasdeumdev.api.services.exceptions.ObjectNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,10 +25,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Integer id) {
         Optional<User> obj = repository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundWxception("Objeto não encontrado"));
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
     }
     /*
-    caso o for pesquisado o id do cliente e ele não estiver salvo no banco, retorna uma exception com a mensagem
+    caso for pesquisado o id do cliente e ele não estiver salvo no banco, retorna uma exception com a mensagem
     "Objeto não encontrado
      */
 
