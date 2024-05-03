@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     public List<User> findAll() {
         return repository.findAll();
-    } // lista do Tipo User
+    }
 
     @Override
     public User create(UserDTO obj) {

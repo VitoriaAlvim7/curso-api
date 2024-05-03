@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,6 +27,7 @@ class UserServiceImplTest {
     public static final String NAME     = "Vitoria";
     public static final String EMAIL    = "vitoria@mail.com";
     public static final String PASSWORD = "123";
+    public static final int INT = 0;
     @InjectMocks
     private UserServiceImpl service;
     @Mock
@@ -72,8 +74,20 @@ class UserServiceImplTest {
     ele esra testando o metodo FindById, caso o Id não estiver salvo, ele lança uma exceção de Objeto não encontrado
      */
 
+    //quando buscar todos retorne uma lista de Usuarios
     @Test
-    void findAll() {
+    void whenfindAllThenReturnAnListOfUsers() {
+        when(repository.findAll()).thenReturn(List.of(user));
+
+        List<User> response = service.findAll();
+
+        assertNotNull(response);
+        assertEquals(1, response.size());
+        assertEquals(User.class, response.get(INT).getClass());
+        assertEquals(ID, response.get(INT).getId());
+        assertEquals(NAME, response.get(INT).getName());
+        assertEquals(EMAIL, response.get(INT).getEmail());
+        assertEquals(PASSWORD, response.get(INT).getPassword());
     }
 
     @Test
