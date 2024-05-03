@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(UserDTO obj) {
+    public User create(UserDTO obj) { //faz uma chamada para um user DTO e retorna um User
         findByEmail(obj);
         return repository.save(mapper.map(obj, User.class));
     }
@@ -58,7 +58,11 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = repository.findByEmail(obj.getEmail());
         if (user.isPresent() && !user.get().getId().equals(obj.getId())) {
             throw  new DataIntegratyViolationException("E-Mail já cadastrado no sistema");
-
         }
+        /*
+        aqui ele aplica uma validação para que procure o eamil no repositorio
+        se o email ja existir ele passa uma exception falando que o email ja foi
+        cadastrado
+         */
     }
 }
