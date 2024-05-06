@@ -10,8 +10,6 @@ import lombok.*;
 @Setter // gerou um metodo setter para todos os atributos
 @AllArgsConstructor // gerou o construtor
 @NoArgsConstructor
-@EqualsAndHashCode
-@ToString
 /*
 essas anotações servem para adicionar os métodos get, set de cada atributo
 o construtor e o HashCode, usando o lombok, assim o codigo nao fica enorme
